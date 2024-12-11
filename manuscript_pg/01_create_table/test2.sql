@@ -1,0 +1,1 @@
+create table manuscript_2024.testttttt(id int4)
