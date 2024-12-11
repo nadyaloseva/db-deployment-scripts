@@ -22,6 +22,12 @@ jobs:
       run: |
         echo "Running database migration script..."
 
+        # Убедитесь, что файл существует
+        if [ ! -f meta.yaml ]; then
+          echo "meta.yaml file not found!"
+          exit 1
+        fi
+
         # Чтение содержимого файла построчно
         while IFS= read -r url; do
           if [ -z "$url" ]; then
@@ -33,11 +39,13 @@ jobs:
           echo "Processing: $filename"  # Использование значения переменной
 
           # Выполнение команды psql
+          set +e
           PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f "$filename"
           if [ $? -ne 0 ]; then
             echo "Error processing file: $filename"
             continue
           fi
+          set -e
 
           # Если filename содержит URL, то используйте curl
           # curl "$filename"
