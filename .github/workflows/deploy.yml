@@ -42,3 +42,4 @@ jobs:
           # Если filename содержит URL, то используйте curl
           # curl "$filename"
         done < meta.yaml
+      shell: /usr/bin/bash -e {0}
