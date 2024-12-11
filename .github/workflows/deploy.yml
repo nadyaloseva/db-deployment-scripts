@@ -22,7 +22,7 @@ jobs:
       run: |
         echo "Running database migration script..."
 
-        cd db-deployment-scripts/manuscript_pg
+        cd manuscript_pg
 
         # Убедитесь, что файл существует
         if [ ! -f meta.yaml ]; then
