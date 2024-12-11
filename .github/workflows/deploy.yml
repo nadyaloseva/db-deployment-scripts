@@ -23,13 +23,13 @@ jobs:
         echo "Running database migration script..."
 
         # Убедитесь, что файл существует
-        if [ ! -f meta.yaml ]; then
+        if [ ! -f manuscript_pg\meta.yaml ]; then
           echo "meta.yaml file not found!"
           exit 1
         fi
 
         # Чтение всех строк из файла в массив
-        mapfile -t filenames < meta.yaml
+        mapfile -t filenames < manuscript_pg\meta.yaml
 
         # Обработка каждой строки из массива
         for filename in "${filenames[@]}"; do
