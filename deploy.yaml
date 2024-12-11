@@ -19,12 +19,15 @@ jobs:
         sudo apt-get install -y postgresql-client
         sudo apt-get install -y python3-pip
         pip3 install yq  # Для работы с YAML файлами
-
+      
+    - name: Install yq
+      run: sudo apt-get install -y yq
+      
     - name: Extract migration scripts from meta.yaml
       id: migrations
       run: |
-        # Читаем все пути к скриптам из manuscript_pg/meta.yaml
-        migration_files=$(yq eval '.[]' manuscript_pg/meta.yaml)
+        # Читаем все пути к скриптам из 
+        migration_files=$(yq eval '.[]' meta.yaml)
         echo "Migration files: $migration_files"
         echo "::set-output name=migrations::$migration_files"
 
