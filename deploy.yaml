@@ -1,0 +1,42 @@
+name: Deploy to Database
+
+on:
+  push:
+    branches:
+      - main  # Триггер на пуш в ветку main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Используем последнюю версию Ubuntu для работы
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y postgresql-client
+        sudo apt-get install -y python3-pip
+        pip3 install yq  # Для работы с YAML файлами
+
+    - name: Extract migration scripts from  manuscript_pg/meta.yaml
+      id: migrations
+      run: |
+        migration_files=$(yq eval '.[]'  manuscript_pg/meta.yaml)
+        echo "Migration files: $migration_files"
+        echo "::set-output name=migrations::$migration_files"
+
+    - name: Run migration scripts
+      env:
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_USER: ${{ secrets.DB_USER }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_NAME: ${{ secrets.DB_NAME }}
+      run: |
+        migrations="${{ steps.migrations.outputs.migrations }}"
+        for script in $migrations; do
+          echo "Running migration $script..."
+          PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f "$script"
+        done
+        echo "Migration completed successfully!"
