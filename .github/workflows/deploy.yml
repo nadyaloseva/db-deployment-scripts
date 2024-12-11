@@ -21,5 +21,12 @@ jobs:
         DB_NAME: ${{ secrets.DB_NAME }}
       run: |
         echo "Running database migration script..."
-        # Путь к файлу в репозитории
-        PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f manuscript_pg/01_create_table/test.sql
+
+        # Чтение содержимого файла построчно
+        while IFS= read -r url; do
+          filename=$url  # Присваивание значения переменной без пробелов
+          echo "Processing: $filename"  # Использование значения переменной
+          PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f "$filename"
+          # Если filename содержит URL, то используйте curl
+          # curl "$filename"
+        done < meta.yaml
