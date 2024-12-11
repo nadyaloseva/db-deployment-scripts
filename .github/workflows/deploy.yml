@@ -5,6 +5,13 @@ on:
     branches:
       - main  # Триггер на пуш в ветку main
 
+name: Deploy to Database
+
+on:
+  push:
+    branches:
+      - main  # Триггер на пуш в ветку main
+
 jobs:
   deploy:
     runs-on: ubuntu-latest  # Используем последнюю версию Ubuntu для работы
@@ -24,9 +31,22 @@ jobs:
 
         # Чтение содержимого файла построчно
         while IFS= read -r url; do
+          if [ -z "$url" ]; then
+            echo "Skipping empty line"
+            continue
+          fi
+
           filename=$url  # Присваивание значения переменной без пробелов
           echo "Processing: $filename"  # Использование значения переменной
+
+          # Выполнение команды psql
           PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f "$filename"
+          if [ $? -ne 0 ]; then
+            echo "Error processing file: $filename"
+            continue
+          fi
+
           # Если filename содержит URL, то используйте curl
           # curl "$filename"
         done < meta.yaml
+
