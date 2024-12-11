@@ -23,7 +23,7 @@ jobs:
     - name: Extract migration scripts from  manuscript_pg/meta.yaml
       id: migrations
       run: |
-        migration_files=$(yq eval '.[] | @csv' manuscript_pg/meta.yaml)
+        migration_files=$(yq eval '.[]' meta.yaml)
         echo "Migration files: $migration_files"
         echo "::set-output name=migrations::$migration_files"
 
