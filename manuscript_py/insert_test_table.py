@@ -4,9 +4,8 @@ from psycopg2 import sql
 try:
     conn = psycopg2.connect(host="85.192.35.124", port=5432, user="manuscript_2024", password="manuscript_ban_24", database="dbstud")
     cur = conn.cursor()
-    # Вставка одной строки в таблицу test
     insert_query = sql.SQL("INSERT INTO test (id) VALUES (%s)")
-    cur.execute(insert_query, (1,))  # Вставка значения 1 в столбец id
+    cur.execute(insert_query, (2,))  
     conn.commit()
     cur.close()
     conn.close()
