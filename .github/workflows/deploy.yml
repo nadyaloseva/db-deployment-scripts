@@ -3,11 +3,11 @@ name: Deploy to Database
 on:
   push:
     branches:
-      - main  # Триггер на пуш в ветку main
+      - main 
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Используем последнюю версию Ubuntu для работы
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
@@ -30,10 +30,8 @@ jobs:
           exit 1
         fi
 
-        # Чтение всех строк из файла в массив
         mapfile -t filenames < meta.yaml
 
-        # Обработка каждой строки из массива
         for filename in "${filenames[@]}"; do
           if [ -z "$filename" ]; then
             echo "Skipping empty line"
@@ -42,7 +40,6 @@ jobs:
 
           echo "Processing: $filename"  # Использование значения переменной
 
-          # Выполнение команды psql
           set +e
           PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f "$filename"
           if [ $? -ne 0 ]; then
@@ -50,8 +47,29 @@ jobs:
             continue
           fi
           set -e
+        done
 
-          # Если filename содержит URL, то используйте curl
-          # curl "$filename"
+        cd ../manuscript_py
+
+        if [ ! -f meta.yaml ]; then
+          echo "meta.yaml file not found!"
+          exit 1
+        fi
+
+        mapfile -t filenames < meta.yaml
+
+        for filename in "${filenames[@]}"; do
+          if [ -z "$filename" ]; then
+            echo "Skipping empty line"
+            continue
+          fi
+
+          echo "Processing: $filename"
+
+          python "$filename"
+          if [ $? -ne 0 ]; then
+            echo "Error processing file: $filename"
+            continue
+          fi
         done
       shell: /usr/bin/bash -e {0}
