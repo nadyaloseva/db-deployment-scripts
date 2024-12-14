@@ -1,1 +1,0 @@
-create table IF NOT EXISTS manuscript_2024.test(id int4)
