@@ -30,7 +30,6 @@ jobs:
           access_key: minioadmin
           secret_key: minioadmin
           bucket: 'a-symbol'
-          target_dir: '/'
         run: |
           mc admin config set myminio notify_postgres:minio-postgres-a connection_string="user=$DB_USER password=$DB_PASSWORD host=$DB_HOST dbname=$DB_NAME port=5432 sslmode=disable" table="a_symbol" format="namespace"
           mc admin service restart myminio
