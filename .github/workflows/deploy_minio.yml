@@ -1,0 +1,22 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Minio Deploy
+        uses: hkdobrev/minio-deploy-action@v1
+        with:
+          endpoint: localhost:9000
+          access_key: minioadmin
+          secret_key: minioadmin
+          bucket: 'a-symbol'
+          target_dir: '/'
