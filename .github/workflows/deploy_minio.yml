@@ -15,7 +15,7 @@ jobs:
       - name: Minio Deploy
         uses: hkdobrev/minio-deploy-action@v1
         with:
-          endpoint: localhost:9000
+          endpoint: http://localhost:9001
           access_key: minioadmin
           secret_key: minioadmin
           bucket: 'a-symbol'
