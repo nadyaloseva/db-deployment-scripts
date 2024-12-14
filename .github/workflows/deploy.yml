@@ -24,17 +24,6 @@ jobs:
           pip install psycopg2
           pip install minio
 
-      - name: Minio Deploy
-        with:
-          endpoint: localhost:9000
-          access_key: minioadmin
-          secret_key: minioadmin
-          bucket: 'a-symbol'
-        run: |
-          mc admin config set myminio notify_postgres:minio-postgres-a connection_string="user=$DB_USER password=$DB_PASSWORD host=$DB_HOST dbname=$DB_NAME port=5432 sslmode=disable" table="a_symbol" format="namespace"
-          mc admin service restart myminio
-          mc event add myminio/a-symbol arn:minio:sqs::minio-postgres-a:postgresql --event put,get,delete
-
       - name: Run a multi-line script
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
