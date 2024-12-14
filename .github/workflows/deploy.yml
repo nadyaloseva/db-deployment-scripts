@@ -25,7 +25,6 @@ jobs:
           pip install minio
 
       - name: Minio Deploy
-        uses: actions/minio@v5
         with:
           endpoint: localhost:9000
           access_key: minioadmin
