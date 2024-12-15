@@ -4,7 +4,7 @@ from psycopg2 import sql
 try:
     conn = psycopg2.connect(host="85.192.35.124", port=5432, user="manuscript_2024", password="manuscript_ban_24", database="dbstud")
     cur = conn.cursor()
-    insert_query = sql.SQL("INSERT INTO a_symbol (key, value) VALUES ('some_text', '[{"street": "street address", "city": "Berlin"}]' )
+    insert_query = sql.SQL("INSERT INTO a_symbol (key, value) VALUES ('some_text', '[{}]' )")
     cur.execute(insert_query, (2,))  
     conn.commit()
     cur.close()
