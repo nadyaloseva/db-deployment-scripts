@@ -82,4 +82,31 @@ jobs:
               continue
             fi
           done
+          
+          
+          cd ../uninstall
+          
+          if [ ! -f meta.yaml ]; then
+            echo "meta.yaml file not found!"
+            exit 1
+          fi
+          
+          mapfile -t filenames < meta.yaml
+          
+          for filename in "${filenames[@]}"; do
+            if [ -z "$filename" ]; then
+              echo "Skipping empty line"
+              continue
+            fi
+          
+            echo "Processing: $filename" 
+          
+            set +e
+            PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f "$filename"
+            if [ $? -ne 0 ]; then
+              echo "Error processing file: $filename"
+              continue
+            fi
+            set -e
+          done
         shell: /usr/bin/bash -e {0}
