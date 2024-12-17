@@ -1,1 +1,1 @@
-DELETE FROM a_symbol;
+DROP table a_symbol;
